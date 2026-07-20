@@ -1,0 +1,1 @@
+export default {darkMode:'class',content:['./index.html','./src/**/*.{ts,tsx}'],theme:{extend:{colors:{primary:'#2563eb',secondary:'#4f46e5',accent:'#9333ea'},boxShadow:{soft:'0 20px 60px rgba(15,23,42,.12)'}}},plugins:[]}
