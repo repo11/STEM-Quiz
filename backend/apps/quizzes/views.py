@@ -1,14 +1,17 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Question, Quiz, QuizAttempt
-from .serializers import AttemptSerializer, QuestionSerializer, QuizSerializer, SubmitQuizSerializer
+from .serializers import AttemptSerializer, AdminQuizSerializer, QuestionSerializer, PublicQuestionSerializer, QuizSerializer, SubmitQuizSerializer
 class AdminWrite(permissions.BasePermission):
-    def has_permission(self,request,view): return request.method in permissions.SAFE_METHODS or request.user.is_staff
-class QuestionViewSet(viewsets.ModelViewSet): queryset=Question.objects.all(); serializer_class=QuestionSerializer; permission_classes=[AdminWrite]
+    def has_permission(self,request,view): return request.user.is_authenticated and (request.method in permissions.SAFE_METHODS or request.user.is_staff)
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset=Question.objects.all(); permission_classes=[AdminWrite]
+    def get_serializer_class(self): return QuestionSerializer if self.request.user.is_staff else PublicQuestionSerializer
 class QuizViewSet(viewsets.ModelViewSet):
-    queryset=Quiz.objects.prefetch_related('questions').select_related('subject'); serializer_class=QuizSerializer; permission_classes=[AdminWrite]
-    @action(detail=True, methods=['post'])
+    queryset=Quiz.objects.prefetch_related('questions').select_related('subject'); permission_classes=[AdminWrite]
+    def get_serializer_class(self): return AdminQuizSerializer if self.request.user.is_staff else QuizSerializer
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def submit(self, request, pk=None):
         quiz=self.get_object()
         if QuizAttempt.objects.filter(student=request.user, quiz=quiz).exists(): return Response({'detail':'Quiz already submitted.'}, status=400)
