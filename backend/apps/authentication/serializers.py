@@ -11,11 +11,14 @@ class RegisterSerializer(serializers.ModelSerializer):
     password=serializers.CharField(write_only=True); confirm_password=serializers.CharField(write_only=True)
     class Meta: model=User; fields=['first_name','last_name','email','student_id','password','confirm_password']
     def validate_first_name(self,v):
-        if not v or not NAME_RE.match(v): raise serializers.ValidationError('First name must contain alphabetic characters only.'); return v
+        if not v or not NAME_RE.match(v): raise serializers.ValidationError('First name must contain alphabetic characters only.')
+        return v
     def validate_last_name(self,v):
-        if not v or not NAME_RE.match(v): raise serializers.ValidationError('Last name must contain alphabetic characters only.'); return v
+        if not v or not NAME_RE.match(v): raise serializers.ValidationError('Last name must contain alphabetic characters only.')
+        return v
     def validate_password(self,v):
-        if not PASSWORD_RE.match(v): raise serializers.ValidationError('Password needs 8 characters, upper/lowercase, number, and special character.'); return v
+        if not PASSWORD_RE.match(v): raise serializers.ValidationError('Password needs 8 characters, upper/lowercase, number, and special character.')
+        return v
     def validate(self,data):
         if data['password'] != data['confirm_password']: raise serializers.ValidationError({'confirm_password':'Passwords must match.'})
         return data
