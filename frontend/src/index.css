@@ -1,0 +1,2 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+body{@apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100} .glass{@apply bg-white/75 dark:bg-slate-900/70 backdrop-blur-xl border border-white/30 dark:border-slate-800} .btn{@apply rounded-2xl px-5 py-3 font-semibold shadow-soft transition disabled:opacity-60} .btn-primary{@apply btn bg-gradient-to-r from-primary via-secondary to-accent text-white hover:scale-[1.02]} .card{@apply glass rounded-3xl p-6 shadow-soft}
