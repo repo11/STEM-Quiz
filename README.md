@@ -1,15 +1,15 @@
 # STEM Quiz and Feedback System
 
-A production-minded full-stack STEM learning platform with a Django REST backend and a React/TypeScript/Tailwind frontend. It supports session authentication, role-based access, quiz attempts with immediate feedback, score history, and performance reports.
+A monolithic STEM learning platform that serves a React/TypeScript/Tailwind single-page app and a Django REST API from one Django deployment. It supports session authentication, role-based access, quiz attempts with immediate feedback, score history, and performance reports.
 
 ## Structure
 
-- `backend/` — Django + Django REST Framework API using SQLite by default.
-- `frontend/` — React + TypeScript SPA using Vite, Tailwind CSS, React Router, React Hook Form, Framer Motion, Axios, Toastify, Lucide icons, and Recharts.
+- `backend/` — Django + Django REST Framework application, API routes, database models, and static/template serving for the compiled frontend.
+- `frontend/` — React + TypeScript source built by Vite into `frontend/dist`, which Django serves at runtime.
 
 ## Quick start
 
-### Backend
+Install backend dependencies and prepare the database:
 
 ```bash
 cd backend
@@ -18,18 +18,35 @@ source .venv/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py seed_demo
+```
+
+Build the frontend assets:
+
+```bash
+cd ../frontend
+npm install
+npm run build
+```
+
+Run the monolith from Django:
+
+```bash
+cd ../backend
 python manage.py runserver
 ```
 
-### Frontend
+Open `http://localhost:8000`. The React app uses same-origin API calls under `/api`, so no separate frontend server is required for normal use.
+
+## Development mode
+
+You can still run Vite separately for hot-module reloading:
 
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
-The frontend expects the API at `http://localhost:8000/api` unless `VITE_API_URL` is set.
+When using the Vite dev server, set `VITE_API_URL=http://localhost:8000/api` if Django is running on port 8000.
 
 ## Demo coverage
 
